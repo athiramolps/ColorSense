@@ -47,20 +47,24 @@ color_data = [
 df = pd.DataFrame(color_data, columns=["Color", "Mood / Vibe", "Hex Code"])
 
 # Title and subtitle
-st.title("🎨 ColorSense")
-st.caption("Find colors based on the mood you want to express")
+st.markdown("<h1 style='text-align: center;'>🎨 ColorSense</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Find colors based on the mood you want to express</p>", unsafe_allow_html=True)
 
-# Dropdown menu for moods
-mood_list = df["Mood / Vibe"].unique()
-selected_mood = st.selectbox("Choose a Mood / Vibe:", sorted(mood_list))
+# Text input for mood
+typed_mood = st.text_input("Type a Mood / Vibe:").strip().lower()
 
-# Filter colors by mood
-filtered = df[df["Mood / Vibe"] == selected_mood]
+# Filter colors by mood keyword
+if typed_mood:
+    filtered = df[df["Mood / Vibe"].str.lower().str.contains(typed_mood)]
 
-# Show results
-for _, row in filtered.iterrows():
-    st.markdown(f"**{row['Color']}** — `{row['Hex Code']}`")
-    st.color_picker("", row['Hex Code'], disabled=True)
+    if filtered.empty:
+        st.warning("No colors found for that mood. Try another keyword.")
+    else:
+        for _, row in filtered.iterrows():
+            st.markdown(f"**{row['Color']}** — `{row['Hex Code']}`")
+            st.color_picker("", row['Hex Code'], disabled=True)
+else:
+    st.info("Type a mood (e.g., calm, energetic, romantic) to see matching colors.")
 
 # Footer
 st.markdown("---")
