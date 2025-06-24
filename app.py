@@ -62,7 +62,11 @@ if typed_mood:
     else:
         for _, row in filtered.iterrows():
             st.markdown(f"**{row['Color']}** — `{row['Hex Code']}`")
-            st.color_picker("", row['Hex Code'], disabled=True)
+            st.markdown(
+                f"<div style='width: 60px; height: 30px; background-color: {row['Hex Code']}; "
+                "border: 1px solid #000; margin-bottom: 10px;'></div>",
+                unsafe_allow_html=True,
+            )
 else:
     st.info("Type a mood (e.g., calm, energetic, romantic) to see matching colors.")
 
